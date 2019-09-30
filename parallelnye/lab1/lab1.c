@@ -64,11 +64,11 @@ int main(int argc, char *argv[]) {
                 X += sin(M2[k]);
             }
         }
-        printf("\n%lf\n", X);
+        printf("%lf\n", X);
 
     }
     gettimeofday(&T2, NULL);
     delta_ms = 1000 * (T2.tv_sec - T1.tv_sec) + (T2.tv_usec - T1.tv_usec) / 1000;
-    printf("\nN = %d. Milliseconds passed: %1ld\n", N, delta_ms);
+    printf("\nN = %d. Milliseconds passed: %1ld\n\n", N, delta_ms);
     return 0;
 }
