@@ -27,9 +27,9 @@ int main(int argc, char *argv[]) {
     for (unsigned int i = 0; i < 50; i++) {
         srand(i); /*инициализировать начальное значение ГСЧ*/
         /*Заполнить массив исходных данных размером NxN*/
-        double M2_prep[N / 2];
-        double M1[N];
-        double M2[N / 2];
+        double *M2_prep = malloc(sizeof(double)* N / 2)
+        double *M1 = malloc(sizeof(double)*N);
+        double *M2 = malloc(sizeof(double)* N / 2);
 
 
         double s;
@@ -54,7 +54,9 @@ int main(int argc, char *argv[]) {
         //M2[0] = fabs(cos(M2[0]));
         fwsCos_64f_A50(&M2[0], &M2[0], 1);
         fwsAbs_64f(&M2[0], &M2[0], 1);
-
+        /* for (int j = 1; j < N / 2; j++) {
+             M2[j] = fabs(cos(M2[j] + M2[j - 1]));
+         }*/
         for (int j = 1; j < N / 2; j++) {
             M2_prep[j] = M2[j] + M2[j - 1];
             fwsCos_64f_A50(&M2_prep[j], &M2[j], 1);
