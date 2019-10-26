@@ -13,19 +13,19 @@ int main(int argc, char *argv[]) {
 
     gettimeofday(&T1, NULL);
     for (unsigned int i = 0; i < 50; i++) {
-        srand(i); /*инициализировать начальное значение ГСЧ*/
+    //    srand(i); /*инициализировать начальное значение ГСЧ*/
         /*Заполнить массив исходных данных размером NxN*/
         double M1[N];
         double M2[N / 2];
 //        var 6
         unsigned int seed = i;
-#pragma omp parallel for default(none) shared(seed, A,N,M1)
+        #pragma omp parallel for default(none) shared(seed, A,N,M1) 
         for (int k = 0; k < N; k++) {
             M1[k] = 1. + rand_r(&seed) / (RAND_MAX / (A - 1.));
 
         }
 //        var 2
-//#pragma omp parallel for default(none)
+        #pragma omp parallel for default(none) shared(seed, A,N,M2) 
         for (int j = 0; j < N / 2; j++) {
             M2[j] = A + rand_r(&seed) / (RAND_MAX / (10. * A - A));
 
@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
 
         /* Решить поставленную задачу, заполнить массив с результатами*/
 //        var 4
+        #pragma omp parallel for default(none) shared(N,M1) 
         for (int k = 0; k < N; k++) {
             M1[k] = pow(M1[k] / M_E, 1. / 3.);
         }
