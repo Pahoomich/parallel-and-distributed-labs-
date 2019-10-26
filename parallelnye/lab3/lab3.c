@@ -19,13 +19,13 @@ int main(int argc, char *argv[]) {
         double M2[N / 2];
 //        var 6
         unsigned int seed = i;
-#pragma omp parallel for default(none)
+#pragma omp parallel for default(none) shared(seed, A,N,M1)
         for (int k = 0; k < N; k++) {
             M1[k] = 1. + rand_r(&seed) / (RAND_MAX / (A - 1.));
 
         }
 //        var 2
-#pragma omp parallel for default(none)
+//#pragma omp parallel for default(none)
         for (int j = 0; j < N / 2; j++) {
             M2[j] = A + rand_r(&seed) / (RAND_MAX / (10. * A - A));
 
