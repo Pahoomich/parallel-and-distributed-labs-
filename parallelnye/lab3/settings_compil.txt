@@ -1,0 +1,6 @@
+STEP 3: Setting the number of threads
+In OpenMP, Before running the code, we can initialise the number of threads to be executed using the following command. Here, we set the number of threads to be getting executed to be 8 threads.
+export OMP_NUM_THREADS=8
+
+Compile: 
+gcc -o gfg -fopenmp geeksforgeeks.c
