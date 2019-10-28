@@ -19,12 +19,12 @@ int main(int argc, char *argv[]) {
         double *M2 = malloc(sizeof(double) * N / 2);
 
         unsigned int seed = i;
-#pragma omp parallel for default(none) shared(M1, seed, N, A)
+//#pragma omp parallel for default(none) shared(M1, seed, N, A)
         for (int k = 0; k < N; k++) {
             M1[k] = 1. + rand_r(&seed) / (RAND_MAX / (A - 1.));
         }
 
-#pragma omp parallel for default(none) shared(M2, seed, N, A)
+//#pragma omp parallel for default(none) shared(M2, seed, N, A)
         for (int j = 0; j < N / 2; j++) {
             M2[j] = A + rand_r(&seed) / (RAND_MAX / (10. * A - A));
         }
@@ -37,11 +37,11 @@ int main(int argc, char *argv[]) {
         }
 
 //      MAP M2        var 2
-#pragma omp parallel for default(none) shared(M2, N)
-        for (int j = 1; j < N / 2; j++) {
-            M2[j] = fabs(cos(M2[j] + M2[j - 1]));
-        }
-        M2[0] = fabs(cos(M2[0]));
+/* parallel for default(none) shared(M2, N)*/
+            for (int j = 1; j < N / 2; j++) {
+                M2[j] = fabs(cos(M2[j] + M2[j - 1]));
+            }
+            M2[0] = fabs(cos(M2[0]));
 
 //      Merge         var 4
 #pragma omp parallel for default(none) shared(M1, M2, N)
@@ -51,9 +51,22 @@ int main(int argc, char *argv[]) {
 
         /*Отсортировать массив с результатами указанным методом*/
 //      Sort         var 6
+/*        double temp;
+        for (int i = 0; i < N / 2; i++) {
+            int first = i % 2; // 0 if i is 0, 2, 4, ...
+            // 1 if i is 1, 3, 5, ...
+#pragma omp parallel for default(none) shared(M2, N, first) private(temp)
+            for (int j = first; j < N / 2 - 1; j += 2) {
+                if (M2[j] > M2[j + 1]) {
+//                    std::swap(M2[j], M2[j + 1]);
+                    temp = M2[j];
+                    M2[j] = M2[j + 1];
+                    M2[j + 1] = temp;
+                }
+            }
+        }*/
         int j;
         double key;
-//#pragma omp parallel for default(none) shared(M2, N) private(key, j)
         for (int k = 1; k < N / 2; k++) {
             key = M2[k];
             j = k - 1;
@@ -63,11 +76,11 @@ int main(int argc, char *argv[]) {
             }
             M2[j + 1] = key;
         }
+
 //      Reduce
         double X = 0.;
         int int_part;
-#pragma omp parallel for default(none) shared(M2, N, X) private(int_part)
-#pragma parallel reduction(+:X)
+#pragma omp parallel for default(none) shared(M2, N) private(int_part) reduction(+:X)
         for (int k = 0; k < N / 2; k++) {
             int_part = M2[k] / M2[0];
             if (!(int_part % 2)) {
