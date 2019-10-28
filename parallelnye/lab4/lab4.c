@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]) {
     int N;
     int A = 315;
-    struct timeval T1, T2;
+    double T1, T2;
     long delta_ms;
     N = atoi(argv[1]);
 
@@ -16,19 +16,23 @@ int main(int argc, char *argv[]) {
         /*GENERATE*Заполнить массив исходных данных размером NxN*/
         double *M1 = malloc(sizeof(double) * N);
         double *M2 = malloc(sizeof(double) * N / 2);
-
-#pragma omp parallel for default(none) shared(M1, seed, N, A)
+        printf("i= %d\n",i );
+#pragma omp parallel /*for default(none)  shared(M1, N, A)*/
         {
             unsigned int seed = i + omp_get_thread_num();
-
+            printf("seed = %d\n ",seed );
+            #pragma omp parallel for default(none)  private(seed) shared(M1, N, A)
             for (int k = 0; k < N; k++) {
                 M1[k] = 1. + rand_r(&seed) / (RAND_MAX / (A - 1.));
             }
-        }
-//#pragma omp parallel for default(none) shared(M2, seed, N, A)
-        for (int j = 0; j < N / 2; j++) {
+
+            #pragma omp parallel for default(none) private(seed) shared(M2, N, A)
+             for (int j = 0; j < N / 2; j++) {
             M2[j] = A + rand_r(&seed) / (RAND_MAX / (10. * A - A));
+
+            }
         }
+
         /* Решить поставленную задачу, заполнить массив с результатами*/
 //       MAP M1       var 6
 #pragma omp parallel for default(none) shared(M1,N)
@@ -68,18 +72,20 @@ int main(int argc, char *argv[]) {
 //      Reduce
         double X = 0.;
         int int_part;
-#pragma omp parallel for default(none) shared(M2, N) private(int_part) reduction(+:X)
+//#pragma omp parallel for default(none) shared(M2, N) private(int_part) reduction(+:X)
         for (int k = 0; k < N / 2; k++) {
             int_part = M2[k] / M2[0];
             if (!(int_part % 2)) {
                 X += sin(M2[k]);
             }
         }
-        printf("%lf\n", X);
+        printf("X = %lf\n", X);
 
     }
     T2 = omp_get_wtime();
-    delta_ms = (T2 - T1)
+    printf("T1= %f\n", T1);
+    printf("T2= %f\n", T2);
+    delta_ms = (T2 - T1)*1000;
     printf("\nN = %d. Milliseconds passed: %1ld\n\n", N, delta_ms);
     return 0;
 }
