@@ -16,17 +16,17 @@ int main(int argc, char *argv[]) {
         /*GENERATE*Заполнить массив исходных данных размером NxN*/
         double *M1 = malloc(sizeof(double) * N);
         double *M2 = malloc(sizeof(double) * N / 2);
-        printf("i= %d\n",i );
+       // printf("i= %d\n",i );
 #pragma omp parallel /*for default(none)  shared(M1, N, A)*/
         {
             unsigned int seed = i + omp_get_thread_num();
-            printf("seed = %d\n ",seed );
-            #pragma omp parallel for default(none)  private(seed) shared(M1, N, A)
+         
+            #pragma omp parallel for default(none)   shared(M1,seed, N, A)
             for (int k = 0; k < N; k++) {
                 M1[k] = 1. + rand_r(&seed) / (RAND_MAX / (A - 1.));
             }
 
-            #pragma omp parallel for default(none) private(seed) shared(M2, N, A)
+            #pragma omp parallel for default(none) shared(M2,seed, N, A)
              for (int j = 0; j < N / 2; j++) {
             M2[j] = A + rand_r(&seed) / (RAND_MAX / (10. * A - A));
 
@@ -69,6 +69,8 @@ int main(int argc, char *argv[]) {
             }
             M2[j + 1] = key;
         }
+
+      
 //      Reduce
         double X = 0.;
         int int_part;
