@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pavelpp/Рабочий стол/учеба/parallel and distributed labs/Distributed_computing/Labs/lab1/pa1_lab/ipc.h
+stddef.h
+-
+stdint.h
+-
+
+/home/pavelpp/Рабочий стол/учеба/parallel and distributed labs/Distributed_computing/Labs/lab1/pa1_lab/main.c
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+unistd.h
+-
+wait.h
+-
+ipc.h
+/home/pavelpp/Рабочий стол/учеба/parallel and distributed labs/Distributed_computing/Labs/lab1/pa1_lab/ipc.h
+
