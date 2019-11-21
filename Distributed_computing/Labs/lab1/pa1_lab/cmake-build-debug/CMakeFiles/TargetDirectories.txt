@@ -1,3 +1,0 @@
-/home/pavelpp/Рабочий стол/учеба/parallel and distributed labs/Distributed_computing/Labs/lab1/pa1_lab/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/pavelpp/Рабочий стол/учеба/parallel and distributed labs/Distributed_computing/Labs/lab1/pa1_lab/cmake-build-debug/CMakeFiles/pa1_lab.dir
-/home/pavelpp/Рабочий стол/учеба/parallel and distributed labs/Distributed_computing/Labs/lab1/pa1_lab/cmake-build-debug/CMakeFiles/edit_cache.dir
