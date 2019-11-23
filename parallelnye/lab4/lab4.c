@@ -22,9 +22,10 @@
 #endif
 int main(int argc, char *argv[]) {
     int N;
+    double itersNum = (double)atoi(argv[2]);;
     int A = 315;
     double T1, T2;
-    double percent = 0.;
+    double chunk_percent, percent = 0.;
     long delta_ms;
     unsigned int i=0;
     N = atoi(argv[1]);
@@ -34,6 +35,8 @@ int main(int argc, char *argv[]) {
     double *M2_pre = malloc(sizeof(double) * N / 2);
     double *M2_1 = malloc(sizeof(double) * N / 4);
     double *M2_2 = malloc(sizeof(double) * N / 4);
+
+    chunk_percent = 100/(itersNum*4);
 
     T1 = omp_get_wtime();
     omp_set_max_active_levels(2);
@@ -54,13 +57,15 @@ int main(int argc, char *argv[]) {
 #pragma omp section
         {
             omp_set_num_threads( 3);
-            for ( i = 0; i < 50; i++) {
+            printf("t3_count= %f\n",itersNum);
+            printf("t3_chunk= %f\n",chunk_percent);
+            for ( i = 0; i < itersNum; i++) {
                 /*GENERATE*Заполнить массив исходных данных размером NxN*/
               //  printf("t3_count= %d\n",omp_get_num_threads());
                 //printf("nameThead3= %d\n",omp_get_thread_num());
               //  printf("i= %d\n",i );
                     unsigned int seed =i;
-                    percent+=0.5;
+                    percent+=chunk_percent;
                     for (int k = 0; k < N; k++) {
                         M1_pre[k] = rand_r(&seed);
                     }
@@ -92,7 +97,7 @@ int main(int argc, char *argv[]) {
                         M2[j] = fabs(cos(M2[j] + M2[j - 1]));
                     }
                     M2[0] = fabs(cos(M2[0]));
-                    percent+=0.5;
+                    percent+=chunk_percent;
                 }
 
 //      Merge         var 4
@@ -168,7 +173,7 @@ int main(int argc, char *argv[]) {
                         X += sin(M2[k]);
                     }
                 }
-                percent+=1.;
+                percent+=chunk_percent*2;
                 printf("%lf\n", X);
 
 
