@@ -22,6 +22,7 @@
 #endif
 int main(int argc, char *argv[]) {
     int N;
+
     double itersNum = (double)atoi(argv[2]);;
     int A = 315;
     double T1, T2;
